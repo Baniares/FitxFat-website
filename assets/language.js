@@ -19,6 +19,20 @@
     return;
   }
   document.addEventListener('DOMContentLoaded', () => {
+    const menus = [...document.querySelectorAll('.language-menu')];
+    document.addEventListener('click', event => {
+      menus.forEach(menu => { if (menu.open && !menu.contains(event.target)) menu.open = false; });
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      menus.forEach(menu => {
+        if (menu.open) {
+          menu.open = false;
+          menu.querySelector('summary').focus();
+          event.preventDefault();
+        }
+      });
+    });
     document.querySelectorAll('[data-language-link]').forEach(link => {
       link.addEventListener('click', () => {
         const language = link.dataset.languageLink;

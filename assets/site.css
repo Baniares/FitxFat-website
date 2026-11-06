@@ -115,3 +115,12 @@ nav > a { min-height: 44px; display: inline-flex; align-items: center; }
 @media (prefers-reduced-motion: reduce) {
   :root, h1 em, .eyebrow, .eyebrow::before, .number, .theme-label, .coming-soon, .policy a, header, footer, .features, .language-menu > div, .language-menu > div a, .mode-toggle { transition: none; }
 }
+/* Selection and hover have distinct jobs: a checkmark versus a quiet pointer cue. */
+.language-menu > div { min-width: 196px; padding: 6px; }
+.language-menu > div a { gap: 18px; transition: background-color 120ms ease, color 120ms ease; }
+.language-menu > div a[aria-current="page"] { background: transparent; color: var(--accent); font-weight: 600; }
+.language-menu > div a[aria-current="page"]::after { content: '✓'; margin-left: auto; color: var(--accent); font-size: 12px; }
+.language-menu > div a:hover { background: color-mix(in srgb, var(--text) 7%, var(--canvas)); color: var(--text); text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .language-menu > div a { transition: none; } }
+
+.language-menu > div a[aria-current="page"]:hover { color: var(--accent); }
