@@ -1,4 +1,4 @@
-// Color and icon projection from FitThemeRegistry.swift; website does not change app preferences.
+// Colors/icons: FitThemeRegistry.swift. Spanish names: Localizable.xcstrings (es-MX).
 const fitxFatThemes = [
   {
     "id": "botanicalGreen",
@@ -14,7 +14,8 @@ const fitxFatThemes = [
       "cta": "#86d3b8",
       "foreground": "#142d25",
       "surface": "#223d33"
-    }
+    },
+    "nameEsMX": "Verde botánico"
   },
   {
     "id": "spectralViolet",
@@ -30,7 +31,8 @@ const fitxFatThemes = [
       "cta": "#c6a1f0",
       "foreground": "#2b1c3d",
       "surface": "#392c49"
-    }
+    },
+    "nameEsMX": "Violeta espectral"
   },
   {
     "id": "aquaticBlue",
@@ -46,7 +48,8 @@ const fitxFatThemes = [
       "cta": "#85c6ea",
       "foreground": "#152b41",
       "surface": "#263849"
-    }
+    },
+    "nameEsMX": "Azul acuático"
   },
   {
     "id": "warmCaramel",
@@ -62,7 +65,8 @@ const fitxFatThemes = [
       "cta": "#d9b183",
       "foreground": "#352617",
       "surface": "#403329"
-    }
+    },
+    "nameEsMX": "Caramelo cálido"
   },
   {
     "id": "goldenYellow",
@@ -78,7 +82,8 @@ const fitxFatThemes = [
       "cta": "#f6d86b",
       "foreground": "#34280d",
       "surface": "#43391f"
-    }
+    },
+    "nameEsMX": "Amarillo dorado"
   },
   {
     "id": "emberCoral",
@@ -94,6 +99,7 @@ const fitxFatThemes = [
       "cta": "#ff9272",
       "foreground": "#361c14",
       "surface": "#452e26"
-    }
+    },
+    "nameEsMX": "Coral brasa"
   }
 ];

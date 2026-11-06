@@ -1,17 +1,23 @@
 (() => {
   'use strict';
   const root = document.documentElement;
+  if (root.dataset.redirecting === 'true') return;
+  const spanish = root.lang === 'es-MX';
   const systemMode = window.matchMedia('(prefers-color-scheme: dark)');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const iconAnimations = new WeakMap();
   const read = (key) => { try { return sessionStorage.getItem(key); } catch { return null; } };
   const write = (key, value) => { try { sessionStorage.setItem(key, value); } catch { /* The page also works without storage. */ } };
   const savedTheme = fitxFatThemes.findIndex(theme => theme.id === read('fitxfat.site.theme'));
-  let themeIndex = root.dataset.page === 'landing' || savedTheme < 0
+  const keepTheme = read('fitxfat.site.keepTheme') === '1';
+  write('fitxfat.site.keepTheme', '');
+  let themeIndex = (root.dataset.page === 'landing' && !keepTheme) || savedTheme < 0
     ? Math.floor(Math.random() * fitxFatThemes.length) : savedTheme;
   const savedMode = read('fitxfat.site.appearance');
   let explicitMode = ['light', 'dark'].includes(savedMode) ? savedMode : null;
   const appearance = () => explicitMode || (systemMode.matches ? 'dark' : 'light');
 
-  function apply() {
+  function apply(animateTheme = false) {
     const theme = fitxFatThemes[themeIndex];
     const mode = appearance();
     const colors = theme[mode];
@@ -23,18 +29,25 @@
     root.style.setProperty('--theme-surface', colors.surface);
     write('fitxfat.site.theme', theme.id);
     document.querySelectorAll('[data-app-icon]').forEach(image => {
-      image.src = `/assets/icons/${theme.id}-${mode}.png`;
+      const source = `/assets/icons/${theme.id}-${mode}.png`;
+      if (image.getAttribute('src') !== source) {
+        iconAnimations.get(image)?.cancel();
+        image.onload = animateTheme && !reducedMotion.matches && typeof image.animate === 'function' ? () => {
+          iconAnimations.set(image, image.animate([{ opacity: .5 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }));
+        } : null;
+        image.src = source;
+      }
     });
-    document.querySelectorAll('[data-theme-name]').forEach(label => { label.textContent = theme.name; });
+    document.querySelectorAll('[data-theme-name]').forEach(label => { label.textContent = spanish ? theme.nameEsMX : theme.name; });
     const favicon = document.getElementById('site-icon');
     if (favicon) favicon.href = `/assets/icons/${theme.id}-${mode}.png`;
     const browserColor = document.querySelector('meta[name="theme-color"]');
     if (browserColor) browserColor.content = colors.cta;
     document.querySelectorAll('[data-toggle-mode]').forEach(button => {
       const next = mode === 'dark' ? 'light' : 'dark';
-      button.textContent = next === 'dark' ? 'Dark mode' : 'Light mode';
-      button.setAttribute('aria-label', `Switch to ${next} mode`);
-      button.setAttribute('aria-pressed', String(mode === 'dark'));
+      button.setAttribute('aria-label', spanish ? 'Modo oscuro' : 'Dark mode');
+      button.setAttribute('aria-checked', String(mode === 'dark'));
+      button.title = spanish ? `Cambiar al modo ${next === 'dark' ? 'oscuro' : 'claro'}` : `Switch to ${next} mode`;
       button.hidden = false;
     });
   }
@@ -45,7 +58,7 @@
     document.querySelectorAll('[data-cycle-theme]').forEach(button => {
       button.addEventListener('click', () => {
         themeIndex = (themeIndex + 1) % fitxFatThemes.length;
-        apply();
+        apply(true);
       });
     });
     document.querySelectorAll('[data-toggle-mode]').forEach(button => {
